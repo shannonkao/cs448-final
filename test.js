@@ -49,7 +49,7 @@ function getVal(range, distribution) {
       var sample = 1/Math.sqrt(2*Math.PI) * Math.exp(-(r-1)*(r-1)/2) * 2;
       return ((range[1] - range[0])*sample + range[0]);
       break;
-    case 'sine':
+    case 'cosine':
       var r = random();
       var sample = (Math.cos(( r )*Math.PI)*0.5 + 0.5);
       return ((range[1] - range[0])*(sample) + range[0]);
@@ -103,7 +103,7 @@ function init() {
   setLight(scene_gauss);
     
   for (var i=0; i<200; i++) {
-    scene_gauss.add(cube('sine'));
+    scene_gauss.add(cube('cosine'));
   }
   
   // globals

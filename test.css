@@ -5,3 +5,14 @@
   display: inline-block;
   vertical-align: top;
 }
+
+.wrapper {
+  display: inline-block;
+  text-align: center;
+  
+}
+
+h2{
+  font-family: Tahoma, Verdana, Segoe, sans-serif;
+  line-height: 10pt;
+}
