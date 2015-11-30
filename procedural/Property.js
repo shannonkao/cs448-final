@@ -4,7 +4,8 @@ Property = function ( parent ) {
 
 Property.prototype = {
   getParent: function() { return this.parent; },
-  eval: function() { return 0; }
+  getValue: function() { return 0; },
+  eval: function() { return 0; },
   
   // utility function to get numeric value from an input
   getValue: function(input) {
@@ -14,12 +15,14 @@ Property.prototype = {
     } else if (input.type == 'range') {
       // TODO replace Math.random() with webppl distribution sampling
       return input.min + (input.max - input.min)*Math.random();
+    } else {
+        return 0;
     }
   }
 }
 
 // scale, rotate, translate
-TransformProperty = function(x, y, z) {
+TransformProperty = function(parent, x, y, z) {
   this.__proto__ = Property;
   
   // numeric values (change per call to eval)
@@ -27,34 +30,47 @@ TransformProperty = function(x, y, z) {
   this.y = 0;
   this.z = 0;
   // inital definition of properties (may be ranges)
-  this._x = x;
-  this._y = y;
-  this._z = z;
+  this._x = x || 0;
+  this._y = y || 0;
+  this._z = z || 0;
   
   this.eval = function() {
       this.x = eval(this._x);
       this.y = eval(this._y);
       this.z = eval(this._z);
   }
+  
+  this.getValue = function() {
+      return [this.x, this.y, this.z];
+  }
+  
 }
 
 // integer count
-CountProperty = function(num) {
+CountProperty = function(parent, num) {
   this.__proto__ = Property;
   
   // numeric count (integer)
   this.num = 0;
   // definition (may be range/function)
-  this._num = num;
+  this._num = num || 0;
 
   this.eval = function() {
       this.num = eval(this._num);
+  }  
+  
+  this.getValue = function() {
+      return this.num;
   }
 }
 
 // geometry, holds a mesh
-GeometryProperty = function(m) {
+GeometryProperty = function(parent, m) {
   this.__proto__ = Property;
   
-  this.mesh = m;
+  this.mesh = m;  
+  
+  this.getValue = function() {
+      return this.mesh;
+  }
 }

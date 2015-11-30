@@ -47,7 +47,7 @@ World.prototype = {
   // on the dependency graph
   eval: function(obj) {
     obj.eval();
-    for (child in edges[obj.id]) {
+    for (child in this.edges[obj.id]) {
       eval(child);
     }
   },
@@ -55,9 +55,20 @@ World.prototype = {
   // generate values for the world
   generate: function() {
     var roots = this.getRoots();
-    for (r in roots) {
-      this.eval(r);
+    for (var i=0; i<roots.length; i++) {
+      this.eval(this.objects[roots[i]]);
     }
+    // return flat json object of world objects
+    var json = {}
+    for (var id in this.objects) {
+        json[id] = {};
+        json[id]["translate"] = this.objects[id].getTranslate().getValue();
+        json[id]["rotate"] = this.objects[id].getRotate().getValue();
+        json[id]["scale"] = this.objects[id].getScale().getValue();
+        json[id]["count"] = this.objects[id].getCount().getValue();
+    }
+    
+    return json;
   }
   
   
