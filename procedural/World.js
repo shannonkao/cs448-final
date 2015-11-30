@@ -8,7 +8,8 @@ World.prototype = {
   addObject: function(obj) { 
     this.objects[obj.id] = obj;
     // add object as child of the objects it's constrainted by
-    for (var c in obj.constraints_) {
+    for (var i=0; i<obj.constraints_.length; i++) {
+      var c = obj.constraints_[i]; 
       if (!this.edges[c.source]) {
         this.edges[c.source] = [obj.id];
       } else {
@@ -32,7 +33,7 @@ World.prototype = {
       // to calculate the parent object's properties (i.e objects referenced
       // by constraints must be calculated before the current one)
       if (Object.keys(this.objects[id].constraints_).length != 0) {
-        isRoot[c.propertyB.parent] = false;
+        isRoot[id] = false;
       }
     }
     // get list of root ids
@@ -47,8 +48,11 @@ World.prototype = {
   // on the dependency graph
   eval: function(obj) {
     obj.eval();
-    for (child in this.edges[obj.id]) {
-      eval(child);
+    if (this.edges[obj.id]) {
+        for (var i=0; i<this.edges[obj.id].length; i++) {
+          var child = this.edges[obj.id][i];
+          this.eval(this.objects[child]);
+        }
     }
   },
   

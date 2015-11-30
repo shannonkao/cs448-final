@@ -74,8 +74,8 @@ ProceduralObject = function() {
             this.propertyNames[p].eval();
         }
         // override defaults with constraints if present
-        for (var c in this.constraints_) {
-            c.eval();
+        for (var i=0; i<this.constraints_.length; i++) {
+            this.constraints_[i].eval();
         }
     }
 };

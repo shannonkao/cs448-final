@@ -8,11 +8,11 @@ Property.prototype = {
   eval: function() { return 0; },
   
   // utility function to get numeric value from an input
-  getValue: function(input) {
+  sampleValue: function(input) {
     // if input is number, return
     if (!isNaN(input)) {
       return input;
-    } else if (input.type == 'range') {
+    } else if (input.type == "range") {
       // TODO replace Math.random() with webppl distribution sampling
       return input.min + (input.max - input.min)*Math.random();
     } else {
@@ -23,8 +23,8 @@ Property.prototype = {
 
 // scale, rotate, translate
 TransformProperty = function(parent, x, y, z) {
+  this.parent = parent;
   this.__proto__ = Property;
-  
   // numeric values (change per call to eval)
   this.x = 0;
   this.y = 0;
@@ -35,19 +35,19 @@ TransformProperty = function(parent, x, y, z) {
   this._z = z || 0;
   
   this.eval = function() {
-      this.x = eval(this._x);
-      this.y = eval(this._y);
-      this.z = eval(this._z);
+      this.x = this.prototype.sampleValue(this._x);
+      this.y = this.prototype.sampleValue(this._y);
+      this.z = this.prototype.sampleValue(this._z);
   }
   
   this.getValue = function() {
       return [this.x, this.y, this.z];
   }
-  
 }
 
 // integer count
 CountProperty = function(parent, num) {
+  this.parent = parent;
   this.__proto__ = Property;
   
   // numeric count (integer)
@@ -56,7 +56,7 @@ CountProperty = function(parent, num) {
   this._num = num || 0;
 
   this.eval = function() {
-      this.num = eval(this._num);
+      this.num = this.prototype.sampleValue(this._num);
   }  
   
   this.getValue = function() {
@@ -74,3 +74,4 @@ GeometryProperty = function(parent, m) {
       return this.mesh;
   }
 }
+
