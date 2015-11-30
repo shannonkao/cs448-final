@@ -1,14 +1,19 @@
 $( document ).ready(function() {
     var w = new World();
 
+    // create cube object, passing in unique id ("cube")
     var cube = new ProceduralObject('cube');
+    // cube properties
     cube.setTranslate(1,2,new Range(5,10));
     cube.setRotate(0,90,0);
     cube.setScale(1,1,1);
     cube.setGeometry('cube');
+    // add to world
     w.addObject(cube);
 
+    // create sphere object
     var sphere = new ProceduralObject('sphere');
+    // define constraint relation functions
     var c1 = function(sphereT, cubeT) {
         sphereT.y = cubeT.y*2;
     }
@@ -16,6 +21,7 @@ $( document ).ready(function() {
         sphereT.z = cubeT.z-1;
     }
     var c_t =cube.getTranslate();
+    // sphere properties
     sphere.addConstraint("translate", cube.getTranslate(), c1);
     sphere.addConstraint("translate", cube.getTranslate(), c2);
     sphere.setRotate(90,180,0);
@@ -25,6 +31,7 @@ $( document ).ready(function() {
     // (TODO this is cause addObject is the only place the constraint graph is updated)
     w.addObject(sphere);
 
+    // generate json
     var json = w.generate();
     console.log(JSON.stringify(json));
 
@@ -32,9 +39,13 @@ $( document ).ready(function() {
     init();
     var proceduralScene = genScene(json);
     scene.add(proceduralScene);
-    console.log(scene);
 	animate();
 });
+
+
+// ---------------------------------------------
+// ----------- THREE.JS SPECIFIC CODE ----------
+// ---------------------------------------------
 
 function setCamera() {
 	camera = new THREE.PerspectiveCamera( 50, 500 / 500, 1, 10000 );
@@ -63,10 +74,8 @@ function init() {
 }
 function animate() {
 	requestAnimationFrame( animate );
-
 	render();
 }
-
 function render() {
 	var time = performance.now();
 	renderer.render( scene, camera );
