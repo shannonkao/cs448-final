@@ -19,3 +19,9 @@ CountProperty = function(num) {
   this.num = num;
   this.__proto__ = Property;
 }
+
+// geometry, holds a mesh
+GeometryProperty = function(m) {
+  this.mesh = m;
+  this.__proto__ = Property;
+}

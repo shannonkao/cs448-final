@@ -38,14 +38,18 @@ var Object = function() {
 
     this.addConstraint = function(propertyName, property, relationFn) {
         if (propertyName in propertyNames) {
-            constraints_.push(new Constraint(propertyNames[propertyName], property, relationFn));
+            constraints_.push(new Constraint(propertyNames[propertyName], property, relationFn, property.parent));
         }
     };
 
-    function Constraint(propertyA, propertyB, relationFn) {
+    function Constraint(propertyA, propertyB, relationFn, source) {
         this.propertyA = propertyA;
         this.propertyB = propertyB;
         this.relationFn = relationFn;
+        this.source = source;             // the id of the other object involved in the constraint
     }
 
+    this.eval = function() {
+        // TODO eval() should generate real-number values for each property
+    }
 };
