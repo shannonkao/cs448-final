@@ -70,6 +70,7 @@ World.prototype = {
         json[id]["rotate"] = this.objects[id].getRotate().getValue();
         json[id]["scale"] = this.objects[id].getScale().getValue();
         json[id]["count"] = this.objects[id].getCount().getValue();
+        json[id]["geometry"] = this.objects[id].getGeometry().getValue();
     }
     
     return json;

@@ -1,11 +1,12 @@
-ProceduralObject = function() {
+ProceduralObject = function(id) {
 
-    this.id = uid();
+    this.id = id || uid();
     
     this.translate_ = new TransformProperty(this.id);
     this.rotate_ = new TransformProperty(this.id);
     this.scale_ = new TransformProperty(this.id);
     this.count_ = new CountProperty(this.id);
+    // TODO add color property
 
     this.geometry_ = new GeometryProperty();
     
