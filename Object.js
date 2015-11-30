@@ -1,8 +1,8 @@
 var Object = function() {
 
-    var translate_ = new TranslateProperty();
-    var rotate_ = new RotateProperty();
-    var scale_ = new ScaleProperty();
+    var translate_ = new TransformProperty();
+    var rotate_ = new TransformProperty();
+    var scale_ = new TransformProperty();
     var count_ = new CountProperty();
 
     var geometry_ = new GeometryProperty();
