@@ -43,13 +43,21 @@ var Object = function() {
     };
 
     function Constraint(propertyA, propertyB, relationFn, source) {
-        this.propertyA = propertyA;
-        this.propertyB = propertyB;
+        this.propertyA = propertyA;       // property of this object being constrained
+        this.propertyB = propertyB;       // property that the constraint depends on
         this.relationFn = relationFn;
         this.source = source;             // the id of the other object involved in the constraint
+        
+        this.eval = function() {
+            this.relationFn(this.propertyA, this.propertyB);
+        }
     }
 
     this.eval = function() {
         // TODO eval() should generate real-number values for each property
+        // assumes that dependencies have already been calculated
+        for (var c in this.constraints_) {
+            c.eval();
+        }
     }
 };
