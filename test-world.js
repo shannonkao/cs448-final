@@ -7,7 +7,7 @@ $( document ).ready(function() {
     cube.setTranslate(1,2,new Range(5,10));
     cube.setRotate(0,90,0);
     cube.setScale(1,1,1);
-    cube.setGeometry('cube');
+    cube.setGeometry('C:/Users/Shannon/Documents/School/448h/final/cs448-final/obj/lion.obj');
     // add to world
     w.addObject(cube);
 
