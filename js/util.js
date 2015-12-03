@@ -33,6 +33,7 @@ function genScene(json) {
                 mesh.rotation.set(objJSON.rotate[0],objJSON.rotate[1],objJSON.rotate[2])
                 mesh.position.set(objJSON.translate[0],objJSON.translate[1],objJSON.translate[2])
                 mesh.scale.set(objJSON.scale[0],objJSON.scale[1],objJSON.scale[2])
+                mesh.material = mat;
                 obj.add(mesh);
             } );
             
