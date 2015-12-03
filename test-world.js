@@ -14,7 +14,7 @@ $( document ).ready(function() {
 
     var table = new ProceduralObject('table');
     table.setGeometry('obj/table.obj');
-    table.setMaterial("#00ffff");
+    table.setMaterial("0x492116");
     table.setScale(1,1,1);
     table.setRotate(0.5,0,0);
 
@@ -39,7 +39,7 @@ $( document ).ready(function() {
     //create chair1 object
     var chair1 = new ProceduralObject('chair1');
     chair1.setGeometry('obj/chair.obj');
-    chair1.setMaterial("#00ffff");
+    chair1.setMaterial("0xA64F2F");
 
     var chair1_translate = function(chair1T, tableT) {
         chair1T.x = tableT.x;
@@ -70,7 +70,7 @@ $( document ).ready(function() {
     //create chair2 object
     var chair2 = new ProceduralObject('chair2');
     chair2.setGeometry('obj/chair.obj');
-    chair2.setMaterial("#00ffff");
+    chair2.setMaterial("0xA64F2F");
     
     var chair2_translate = function(chair2T, tableT) {
         chair2T.x = tableT.x;
@@ -127,7 +127,7 @@ $( document ).ready(function() {
     //create lamp object
     var lamp = new ProceduralObject('lamp');
     lamp.setGeometry('obj/table_lamp.obj');
-    lamp.setMaterial("#00ffff");
+    lamp.setMaterial("0x121212");
 
     var lamp_translate = function(lampT, tableT) {
         lampT.x = tableT.x-0.7;
@@ -206,7 +206,8 @@ function setCamera() {
 function setLight(s) {
 	var light = new THREE.DirectionalLight( 0xffffff, 1.0 );
 	light.position.set( 90, 70, 10 );
-	s.add( light );
+    //light.castShadow = true;
+	scene.add( light );
 
     // var ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white ambientLight
     // scene.add( ambientLight );
@@ -221,23 +222,27 @@ function setLight(s) {
 
     var pointLight = new THREE.PointLight(  0xff0000, 1, 20, 0.7);
     pointLight.position.set( 0, 10, 10 );
-    scene.add( pointLight );
+    //scene.add( pointLight );
 
     var pointLight2 = new THREE.PointLight(  0xffffff, 1, 10, 0.7);
+    pointLight2.castShadow = true;
+    pointLight2.shadowDarkness = 0.5
+    pointLight2.shadowMapWidth = 1024; // default is 512
+    pointLight2.shadowMapHeight = 1024; // default is 512
     pointLight2.position.set( 0, 6, 5 );
     scene.add( pointLight2 );
 
     var pointLight3 = new THREE.PointLight(  0xff0000, 1, 20, 0.7);
     pointLight3.position.set( 1, 8, 4 );
-    scene.add( pointLight3 );
+    //scene.add( pointLight3 );
 
     var pointLight4 = new THREE.PointLight(  0xffffff, 1, 10, 0.7);
     pointLight4.position.set( -1, 7, 3 );
-    scene.add( pointLight4 );
+    //scene.add( pointLight4 );
 
     var pointLight5 = new THREE.PointLight(  0xff0000, 1, 10, 0.7);
     pointLight5.position.set( 2, 10, 6 );
-    scene.add( pointLight5 );
+    //scene.add( pointLight5 );
 }
 
 function init() {	
@@ -247,6 +252,8 @@ function init() {
 	container = document.getElementById( 'container' );
 	
 	renderer = new THREE.WebGLRenderer();
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMapType = THREE.PCFSoftShadowMap;
 	clearColor = new THREE.Color(0x000000);
 	renderer.setClearColor( clearColor );
 	renderer.setSize( 500, 500 );
@@ -254,10 +261,12 @@ function init() {
 
     setLight(scene);
     setCamera();
+	controls = new THREE.OrbitControls( camera, renderer.domElement );
 }
 function animate() {
 	requestAnimationFrame( animate );
 	render();
+	controls.update();
 }
 function render() {
 	var time = performance.now();

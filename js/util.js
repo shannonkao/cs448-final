@@ -16,12 +16,14 @@ function uid() {
 function genScene(json) {
     var obj = new THREE.Object3D();
     for (var id in json) {
-        var mat = new THREE.MeshLambertMaterial();
+        var mat = new THREE.MeshPhongMaterial();
         if (json[id].material.split('.').pop() == "jpg" || json[id].material.split('.').pop() == "png") {
             mat.map = THREE.ImageUtils.loadTexture(json[id].material);
             mat.needsUpdate = true;
         } else {
-            mat.color.set(json[id].material);
+            //console.log(mat);
+            mat.color.setHex(json[id].material);
+            //console.log(json[id].material);
             mat.needsUpdate = true;
         }
         // var geom = new THREE.Geometry();
@@ -50,7 +52,13 @@ function genScene(json) {
                     mesh.rotation.set(objJSON.rotate[0],objJSON.rotate[1],objJSON.rotate[2])
                     mesh.position.set(objJSON.translate[0],objJSON.translate[1],objJSON.translate[2])
                     mesh.scale.set(objJSON.scale[0],objJSON.scale[1],objJSON.scale[2])
-                    mesh.material = mat;
+                    mesh.traverse( function( child ) {
+                        if (child instanceof THREE.Mesh) {
+                            child.material = mat;
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                        }
+                    });
                     obj.add(mesh);
                 } );
             })(objJSON, mat);
@@ -72,6 +80,8 @@ function genScene(json) {
             mesh.rotation.set(json[id].rotate[0],json[id].rotate[1],json[id].rotate[2])
             mesh.position.set(json[id].translate[0],json[id].translate[1],json[id].translate[2])
             mesh.scale.set(json[id].scale[0],json[id].scale[1],json[id].scale[2])
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
             obj.add(mesh);   
         }
     }        
