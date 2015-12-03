@@ -4,13 +4,10 @@ $( document ).ready(function() {
     // create floor object, passing in unique id ("floor")
     var floor = new ProceduralObject('floor');
     // floor properties
-    floor.setTranslate(0,5,new Range(-20,-5));
-    floor.setRotate(-20,0,new Range(-10,10));
-    // floor.setTranslate(0,0,0);
-    // floor.setRotate(0,0,0);
-    floor.setScale(30,30,1);
+    floor.setTranslate(0,2,new Range(0,10));
+    floor.setRotate(-1.2,0,new Range(0.5, 1.5));
+    floor.setScale(10,10,1);
     floor.setMaterial("textures/wood_floor_texture.jpg");
-    // floor.setGeometry('obj/lion.obj');
     floor.setGeometry('plane');
     // add to world
     w.addObject(floor);
@@ -22,14 +19,15 @@ $( document ).ready(function() {
     table.setRotate(0.5,0,0);
 
     var table_translate = function(tableT, floorT) {
-        var x_range = new Range(floorT.x-((floor.getScale().x)/2)-5, floorT.x+((floor.getScale().x)/2)+5);
+        var x_range = new Range(floorT.x-((floor.getScale().x)/2)+2, floorT.x+((floor.getScale().x)/2)-2);
         tableT.x = tableT.prototype.sampleValue(x_range);
-        var y_range = new Range(floorT.y-((floor.getScale().y)/2)-5, floorT.y+((floor.getScale().y)/2)-5);
+        var z_range = new Range(floorT.z-((floor.getScale().z)/2)+2, floorT.z+((floor.getScale().z)/2)-2);
         tableT.y = floorT.y;
-        tableT.z = floorT.z;
+        tableT.z = tableT.prototype.sampleValue(z_range);
     }
 
     var table_rotate = function(tableR, floorR) {
+        tableR.x = 3.14/2+floorR.x/*-.02*/;
         tableR.y = floorR.z;
     }
 
@@ -44,7 +42,7 @@ $( document ).ready(function() {
     chair1.setMaterial("#00ffff");
 
     var chair1_translate = function(chair1T, tableT) {
-        chair1T.x = tableT.x-10;
+        chair1T.x = tableT.x;
         chair1T.y = tableT.y;
         chair1T.z = tableT.z;
     }
@@ -73,21 +71,18 @@ $( document ).ready(function() {
     var chair2 = new ProceduralObject('chair2');
     chair2.setGeometry('obj/chair.obj');
     chair2.setMaterial("#00ffff");
-    // chair2.setTranslate(0,0,0);
-    // chair2.setRotate(0,0,0);
-    // chair2.setScale(1,1,1);
     
     var chair2_translate = function(chair2T, tableT) {
         chair2T.x = tableT.x;
         chair2T.y = tableT.y;
-        chair2T.z = tableT.z+10;
+        chair2T.z = tableT.z;
     }
 
     chair2.addConstraint("translate", table.getTranslate(), chair2_translate);
 
     var chair2_rotate = function(chair2R, tableR) {
         chair2R.x = tableR.x;
-        chair2R.y = tableR.y;
+        chair2R.y = tableR.y + 3.14159;
         chair2R.z = tableR.z;
     }
 
@@ -97,26 +92,68 @@ $( document ).ready(function() {
 
     w.addObject(chair2);
 
-    // create sphere object
-    var sphere = new ProceduralObject('sphere');
-    // define constraint relation functions
-    var c1 = function(sphereT, floorT) {
-        sphereT.y = floorT.y*2;
+    //create cup object
+    var cup = new ProceduralObject('cup');
+    cup.setGeometry('obj/cup.obj');
+    cup.setMaterial("textures/text.jpg");
+
+    var cup_translate = function(cupT, tableT) {
+        cupT.x = tableT.x;
+        cupT.y = tableT.y+1.97;
+        cupT.z = tableT.z;
     }
-    var c2 = function(sphereT, floorT) {
-        sphereT.z = floorT.z-1;
+
+    cup.addConstraint("translate", table.getTranslate(), cup_translate);
+
+    var cup_rotate = function(cupR, tableR) {
+        cupR.x = tableR.x;
+        cupR.y = tableR.y;
+        cupR.z = tableR.z;
     }
-    var c_t =floor.getTranslate();
-    // sphere properties
-    sphere.addConstraint("translate", floor.getTranslate(), c1);
-    sphere.addConstraint("translate", floor.getTranslate(), c2);
-    sphere.setRotate(90,180,0);
-    sphere.setScale(1,1,1);
-    sphere.setGeometry('sphere');
-    sphere.setMaterial('textures/brick_texture.jpg');
-    // must add object after adding constraints 
-    // (TODO this is cause addObject is the only place the constraint graph is updated)
-    w.addObject(sphere);
+
+    cup.addConstraint("rotate", table.getRotate(), cup_rotate);
+
+    var cup_scale = function(cupS, tableS) {
+        cupS.x = 0.021*tableS.x;
+        cupS.y = 0.021*tableS.y;
+        cupS.z = 0.021*tableS.z;
+    }
+
+    cup.addConstraint("scale", table.getScale(), cup_scale);
+
+    w.addObject(cup);
+
+
+    //create lamp object
+    var lamp = new ProceduralObject('lamp');
+    lamp.setGeometry('obj/table_lamp.obj');
+    lamp.setMaterial("#00ffff");
+
+    var lamp_translate = function(lampT, tableT) {
+        lampT.x = tableT.x-0.7;
+        lampT.y = tableT.y+1.1;
+        lampT.z = tableT.z+1.8;
+    }
+
+    lamp.addConstraint("translate", table.getTranslate(), lamp_translate);
+
+    var lamp_rotate = function(lampR, tableR) {
+        lampR.x = tableR.x;
+        lampR.y = tableR.y;
+        lampR.z = tableR.z;
+    }
+
+    lamp.addConstraint("rotate", table.getRotate(), lamp_rotate);
+
+    var lamp_scale = function(lampS, tableS) {
+        lampS.x = 0.01*tableS.x;
+        lampS.y = 0.01*tableS.y;
+        lampS.z = 0.01*tableS.z;
+    }
+
+    lamp.addConstraint("scale", table.getScale(), lamp_scale);
+
+    w.addObject(lamp);
 
     // generate json
     var json = w.generate();
@@ -167,10 +204,42 @@ function setCamera() {
     });
 }
 function setLight(s) {
-	var light = new THREE.DirectionalLight( 0xffffff, 1.5 );
-	light.position.set( 90, 70, 100 );
+	var light = new THREE.DirectionalLight( 0xffffff, 1.0 );
+	light.position.set( 90, 70, 10 );
 	s.add( light );
+
+    // var ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white ambientLight
+    // scene.add( ambientLight );
+
+    var spotLight = new THREE.SpotLight( 0xffffff );
+    spotLight.position.set( 1000, 100, 100 );
+    scene.add( spotLight );
+
+    var spotLight2 = new THREE.SpotLight( 0xffffff );
+    spotLight2.position.set( 5, 10, 15 );
+    scene.add( spotLight2 );
+
+    var pointLight = new THREE.PointLight(  0xff0000, 1, 20, 0.7);
+    pointLight.position.set( 0, 10, 10 );
+    scene.add( pointLight );
+
+    var pointLight2 = new THREE.PointLight(  0xffffff, 1, 10, 0.7);
+    pointLight2.position.set( 0, 6, 5 );
+    scene.add( pointLight2 );
+
+    var pointLight3 = new THREE.PointLight(  0xff0000, 1, 20, 0.7);
+    pointLight3.position.set( 1, 8, 4 );
+    scene.add( pointLight3 );
+
+    var pointLight4 = new THREE.PointLight(  0xffffff, 1, 10, 0.7);
+    pointLight4.position.set( -1, 7, 3 );
+    scene.add( pointLight4 );
+
+    var pointLight5 = new THREE.PointLight(  0xff0000, 1, 10, 0.7);
+    pointLight5.position.set( 2, 10, 6 );
+    scene.add( pointLight5 );
 }
+
 function init() {	
     // uniform dist
 	scene = new THREE.Scene();
