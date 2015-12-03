@@ -9,6 +9,7 @@ ProceduralObject = function(id) {
     // TODO add color property
 
     this.geometry_ = new GeometryProperty();
+    this.material_ = new MaterialProperty();
     
     this.constraints_ = [];
 
@@ -47,6 +48,11 @@ ProceduralObject = function(id) {
     this.setGeometry = function(geometry) {
         this.geometry_.mesh = geometry;
     };
+
+    this.getMaterial = function() {return this.material_};
+    this.setMaterial = function(material) {
+        this.material_.color = material;
+    }
 
     this.addConstraint = function(propertyName, property, relationFn) {
         if (propertyName in this.propertyNames) {

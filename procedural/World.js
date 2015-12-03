@@ -71,10 +71,9 @@ World.prototype = {
         json[id]["scale"] = this.objects[id].getScale().getValue();
         json[id]["count"] = this.objects[id].getCount().getValue();
         json[id]["geometry"] = this.objects[id].getGeometry().getValue();
+        json[id]["material"] = this.objects[id].getMaterial().getValue();
     }
     
     return json;
   }
-  
-  
 }

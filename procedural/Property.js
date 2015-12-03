@@ -75,3 +75,13 @@ GeometryProperty = function(parent, m) {
   }
 }
 
+MaterialProperty = function(parent, c) {
+  this.__proto__ = Property;
+
+  this.color = c;
+
+  this.getValue = function() {
+    return this.color;
+  }
+}
+

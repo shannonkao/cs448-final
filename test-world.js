@@ -1,32 +1,61 @@
 $( document ).ready(function() {
     var w = new World();
 
-    // create cube object, passing in unique id ("cube")
-    var cube = new ProceduralObject('cube');
-    // cube properties
-    cube.setTranslate(1,2,new Range(5,10));
-    cube.setRotate(0,90,0);
-    cube.setScale(1,1,1);
-    cube.setGeometry('C:/Users/Shannon/Documents/School/448h/final/cs448-final/obj/lion.obj');
+    // create floor object, passing in unique id ("floor")
+    var floor = new ProceduralObject('floor');
+    // floor properties
+    floor.setTranslate(0,5,new Range(-10,5));
+    floor.setRotate(-20,0,new Range(-10,10));
+    // floor.setTranslate(0,0,0);
+    // floor.setRotate(0,0,0);
+    floor.setScale(30,30,1);
+    floor.setMaterial("textures/wood_floor_texture.jpg");
+    // floor.setGeometry('obj/lion.obj');
+    floor.setGeometry('plane');
     // add to world
-    w.addObject(cube);
+    w.addObject(floor);
+
+    var table = new ProceduralObject('table');
+    table.setGeometry('obj/table.obj');
+    table.setMaterial("#00ffff");
+    table.setScale(1,1,1);
+    // table.setRotate(180,0,90);
+    // table.setTranslate(0,0,0);
+
+    var table_translate = function(tableT, floorT) {
+        tableT.x = floorT.x;
+        tableT.y = floorT.y;
+        tableT.z = floorT.z;
+    }
+
+    var table_rotate = function(tableR, floorR) {
+        tableR.x = floorR.x;
+        tableR.y = floorR.y;
+        tableR.z = floorR.z;
+    }
+
+    table.addConstraint("translate", floor.getTranslate(), table_translate);
+    table.addConstraint("rotate", floor.getRotate(), table_rotate);
+
+    w.addObject(table);
 
     // create sphere object
     var sphere = new ProceduralObject('sphere');
     // define constraint relation functions
-    var c1 = function(sphereT, cubeT) {
-        sphereT.y = cubeT.y*2;
+    var c1 = function(sphereT, floorT) {
+        sphereT.y = floorT.y*2;
     }
-    var c2 = function(sphereT, cubeT) {
-        sphereT.z = cubeT.z-1;
+    var c2 = function(sphereT, floorT) {
+        sphereT.z = floorT.z-1;
     }
-    var c_t =cube.getTranslate();
+    var c_t =floor.getTranslate();
     // sphere properties
-    sphere.addConstraint("translate", cube.getTranslate(), c1);
-    sphere.addConstraint("translate", cube.getTranslate(), c2);
+    sphere.addConstraint("translate", floor.getTranslate(), c1);
+    sphere.addConstraint("translate", floor.getTranslate(), c2);
     sphere.setRotate(90,180,0);
     sphere.setScale(1,1,1);
     sphere.setGeometry('sphere');
+    sphere.setMaterial('textures/brick_texture.jpg');
     // must add object after adding constraints 
     // (TODO this is cause addObject is the only place the constraint graph is updated)
     w.addObject(sphere);
@@ -51,6 +80,33 @@ function setCamera() {
 	camera = new THREE.PerspectiveCamera( 50, 500 / 500, 1, 10000 );
 	camera.position.y = 3.0;
 	camera.position.z = 15.0;
+
+    var positionIncrement = 1;
+    var rotationIncrement = 0.1;
+
+    document.addEventListener('keydown', function(e) {
+        var key = e.keyCode;
+            
+        switch( key ) {
+            //keyup
+            case 38 :
+                camera.position.z -= positionIncrement;
+                break;
+            //keydown
+            case 40 :
+                camera.position.z += positionIncrement;
+                break;
+            //keyleft
+            case 37 :
+                camera.rotation.y += rotationIncrement;
+                break;
+
+            //keyright
+            case 39 :
+                camera.rotation.y -= rotationIncrement;
+                break;
+        }
+    });
 }
 function setLight(s) {
 	var light = new THREE.DirectionalLight( 0xffffff, 1.5 );
