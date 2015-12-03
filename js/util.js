@@ -26,14 +26,16 @@ function genScene(json) {
         var geom = new THREE.Geometry();
         if (json[id].geometry.split('.').pop() == "obj") {
             // obj file
-            _objloader.load(json[id].geometry, function(mesh) {
+            var objJSON = json[id];
+            _objloader.load(objJSON.geometry, function(mesh) {
                 // var material = new THREE.MeshLambertMaterial();
                 // var mesh = new THREE.Mesh(geometry, material);
-                mesh.rotation.set(json[id].rotate[0],json[id].rotate[1],json[id].rotate[2])
-                mesh.position.set(json[id].translate[0],json[id].translate[1],json[id].translate[2])
-                mesh.scale.set(json[id].scale[0],json[id].scale[1],json[id].scale[2])
+                mesh.rotation.set(objJSON.rotate[0],objJSON.rotate[1],objJSON.rotate[2])
+                mesh.position.set(objJSON.translate[0],objJSON.translate[1],objJSON.translate[2])
+                mesh.scale.set(objJSON.scale[0],objJSON.scale[1],objJSON.scale[2])
                 obj.add(mesh);
             } );
+            
             
         } else {
             // default shapes
