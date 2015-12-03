@@ -27,16 +27,17 @@ function genScene(json) {
         if (json[id].geometry.split('.').pop() == "obj") {
             // obj file
             var objJSON = json[id];
-            _objloader.load(objJSON.geometry, function(mesh) {
-                // var material = new THREE.MeshLambertMaterial();
-                // var mesh = new THREE.Mesh(geometry, material);
-                mesh.rotation.set(objJSON.rotate[0],objJSON.rotate[1],objJSON.rotate[2])
-                mesh.position.set(objJSON.translate[0],objJSON.translate[1],objJSON.translate[2])
-                mesh.scale.set(objJSON.scale[0],objJSON.scale[1],objJSON.scale[2])
-                mesh.material = mat;
-                obj.add(mesh);
-            } );
-            
+            (function(objJSON, mat) {
+                _objloader.load(objJSON.geometry, function(mesh) {
+                    // var material = new THREE.MeshLambertMaterial();
+                    // var mesh = new THREE.Mesh(geometry, material);
+                    mesh.rotation.set(objJSON.rotate[0],objJSON.rotate[1],objJSON.rotate[2])
+                    mesh.position.set(objJSON.translate[0],objJSON.translate[1],objJSON.translate[2])
+                    mesh.scale.set(objJSON.scale[0],objJSON.scale[1],objJSON.scale[2])
+                    mesh.material = mat;
+                    obj.add(mesh);
+                } );
+            })(objJSON, mat);
             
         } else {
             // default shapes
