@@ -22,7 +22,7 @@ $( document ).ready(function() {
     table.setRotate(0.5,0,0);
 
     var table_translate = function(tableT, floorT) {
-        var x_range = new Range(floorT.x-((floor.getScale().x)/2)+5, floorT.x+((floor.getScale().x)/2)-5);
+        var x_range = new Range(floorT.x-((floor.getScale().x)/2)-5, floorT.x+((floor.getScale().x)/2)+5);
         tableT.x = tableT.prototype.sampleValue(x_range);
         var y_range = new Range(floorT.y-((floor.getScale().y)/2)-5, floorT.y+((floor.getScale().y)/2)-5);
         tableT.y = floorT.y;
@@ -42,25 +42,22 @@ $( document ).ready(function() {
     var chair1 = new ProceduralObject('chair1');
     chair1.setGeometry('obj/chair.obj');
     chair1.setMaterial("#00ffff");
-    chair1.setTranslate(0,0,0);
-    chair1.setRotate(0,0,0);
-    chair1.setScale(1,1,1);
 
     var chair1_translate = function(chair1T, tableT) {
-        chair1T.x = tableT.x;
+        chair1T.x = tableT.x-10;
         chair1T.y = tableT.y;
         chair1T.z = tableT.z;
     }
 
-    // chair1.addConstraint("translate", table.getTranslate(), chair1_translate);
+    chair1.addConstraint("translate", table.getTranslate(), chair1_translate);
 
     var chair1_rotate = function(chair1R, tableR) {
-        chair1T.x = tableT.x;
-        chair1T.y = tableT.y;
-        chair1T.z = tableT.z;
+        chair1R.x = tableR.x;
+        chair1R.y = tableR.y;
+        chair1R.z = tableR.z;
     }
 
-    // chair1.addConstraint("rotate", table.getRotate(), chair1_rotate);
+    chair1.addConstraint("rotate", table.getRotate(), chair1_rotate);
 
     var chair_scale = function(chairS, tableS) {
         chairS.x = tableS.x;
@@ -68,9 +65,37 @@ $( document ).ready(function() {
         chairS.z = tableS.z;
     }
 
-    // chair1.addConstraint("scale", table.getScale(), chair_scale);
+    chair1.addConstraint("scale", table.getScale(), chair_scale);
 
     w.addObject(chair1);
+
+    //create chair2 object
+    var chair2 = new ProceduralObject('chair2');
+    chair2.setGeometry('obj/chair.obj');
+    chair2.setMaterial("#00ffff");
+    // chair2.setTranslate(0,0,0);
+    // chair2.setRotate(0,0,0);
+    // chair2.setScale(1,1,1);
+    
+    var chair2_translate = function(chair2T, tableT) {
+        chair2T.x = tableT.x;
+        chair2T.y = tableT.y;
+        chair2T.z = tableT.z+10;
+    }
+
+    chair2.addConstraint("translate", table.getTranslate(), chair2_translate);
+
+    var chair2_rotate = function(chair2R, tableR) {
+        chair2R.x = tableR.x;
+        chair2R.y = tableR.y;
+        chair2R.z = tableR.z;
+    }
+
+    chair2.addConstraint("rotate", table.getRotate(), chair2_rotate);
+
+    chair2.addConstraint("scale", table.getScale(), chair_scale);
+
+    w.addObject(chair2);
 
     // create sphere object
     var sphere = new ProceduralObject('sphere');
