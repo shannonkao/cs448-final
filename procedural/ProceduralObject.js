@@ -6,8 +6,8 @@ ProceduralObject = function(id) {
     this.rotate_ = new TransformProperty(this.id);
     this.scale_ = new TransformProperty(this.id);
     this.count_ = new CountProperty(this.id);
-    // TODO add color property
-
+    
+    this.bbox_ = new BBoxProperty();
     this.geometry_ = new GeometryProperty();
     this.material_ = new MaterialProperty();
     
@@ -53,6 +53,15 @@ ProceduralObject = function(id) {
     this.setMaterial = function(material) {
         this.material_.color = material;
     }
+    
+    this.setBBox = function() {
+        this.bbox_.min.x = this.translate_.x - this.scale_.x/2;
+        this.bbox_.max.x = this.translate_.x + this.scale_.x/2;
+        this.bbox_.min.y = this.translate_.y - this.scale_.y/2;
+        this.bbox_.max.y = this.translate_.y + this.scale_.y/2;
+        this.bbox_.min.z = this.translate_.z - this.scale_.z/2;
+        this.bbox_.max.z = this.translate_.z + this.scale_.z/2;
+    }
 
     this.addConstraint = function(propertyName, property, relationFn) {
         if (propertyName in this.propertyNames) {
@@ -84,5 +93,6 @@ ProceduralObject = function(id) {
         for (var i=0; i<this.constraints_.length; i++) {
             this.constraints_[i].eval();
         }
+        this.setBBox();
     }
 };
