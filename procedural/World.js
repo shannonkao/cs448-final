@@ -1,6 +1,12 @@
 World = function () {
-  this.objects = {};  // list of procedural objects
-  this.edges = {};    // map of object id to direct children
+  this.objects = {};    // list of procedural objects
+  this.edges = {};      // map of object id to direct children
+  
+  this.error = "";      // error string for scenes that cannot be evaluated
+  this.json = {};       // json output of evaluated scene
+  
+  this.visited = {};    // variables for cycle detection
+  this.stack = {};
 }
 
 World.prototype = {
@@ -21,10 +27,11 @@ World.prototype = {
   // traverses current list of objects to find root nodes
   // in constraint graph
   getRoots: function() {
-    // create hash of object id to bool
+    // create hash of object id to bool, reset visited node table
     var isRoot = {};
     for (var id in this.objects) {
       isRoot[id] = true;
+      this.visited[id] = false;
     }
     // iterate over children
     for (var id in this.objects) {
@@ -46,22 +53,43 @@ World.prototype = {
   
   // generate values for an object and it's children based 
   // on the dependency graph
-  eval: function(obj) {
+  eval: function(obj, parent) {
+    this.stack[obj.id] = true;
+    
+    // evaluate object
     obj.eval();
-    if (this.edges[obj.id]) {
+    if (this.edges[obj.id] && !this.visited[obj.id]) {
+        this.visited[obj.id] = true;
         for (var i=0; i<this.edges[obj.id].length; i++) {
-          var child = this.edges[obj.id][i];
-          this.eval(this.objects[child]);
+            var child = this.edges[obj.id][i];
+            // error checking
+            if (this.stack[this.objects[child].id]) {
+                this.error = "Cycle detected in your graph.";
+                return;
+            }
+            // recurse
+            this.eval(this.objects[child], this.obj);
         }
     }
+    
+    this.stack[obj.id] = false;
   },
   
   // generate values for the world
   generate: function() {
     var roots = this.getRoots();
+    if (roots.length === 0) this.error = "No root nodes detected in your scene."
+        
     for (var i=0; i<roots.length; i++) {
-      this.eval(this.objects[roots[i]]);
+      this.eval(this.objects[roots[i]], null);
     }
+    
+    if (this.error != "") {
+        return {"error": this.error};
+    } else {
+        //return this.json;
+    }
+    
     // return flat json object of world objects
     var json = {}
     for (var id in this.objects) {
@@ -71,10 +99,9 @@ World.prototype = {
         json[id]["scale"] = this.objects[id].getScale().getValue();
         json[id]["count"] = this.objects[id].getCount().getValue();
         json[id]["geometry"] = this.objects[id].getGeometry().getValue();
+        json[id]["material"] = this.objects[id].getMaterial().getValue();
     }
     
     return json;
   }
-  
-  
 }

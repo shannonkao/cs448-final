@@ -53,7 +53,7 @@ CountProperty = function(parent, num) {
   // numeric count (integer)
   this.num = 0;
   // definition (may be range/function)
-  this._num = num || 0;
+  this._num = num || 1;
 
   this.eval = function() {
       this.num = this.prototype.sampleValue(this._num);
@@ -75,3 +75,23 @@ GeometryProperty = function(parent, m) {
   }
 }
 
+MaterialProperty = function(parent, c) {
+  this.__proto__ = Property;
+
+  this.color = c || "0xffffff";
+
+  this.getValue = function() {
+    return this.color;
+  }
+}
+
+BBoxProperty = function(parent) {
+  this.__proto__ = Property;
+
+  this.min = {x: 0, y: 0, z: 0};
+  this.max = {x: 0, y: 0, z: 0};
+
+  this.getValue = function() {
+    return {max: this.max, min: this.min};
+  }
+}
