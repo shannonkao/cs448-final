@@ -54,12 +54,12 @@ World.prototype = {
   // generate values for an object and it's children based 
   // on the dependency graph
   eval: function(obj, parent) {
-    this.visited[obj.id] = true;
     this.stack[obj.id] = true;
     
     // evaluate object
     obj.eval();
-    if (this.edges[obj.id]) {
+    if (this.edges[obj.id] && !this.visited[obj.id]) {
+        this.visited[obj.id] = true;
         for (var i=0; i<this.edges[obj.id].length; i++) {
             var child = this.edges[obj.id][i];
             // error checking

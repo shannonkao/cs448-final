@@ -92,37 +92,39 @@ $( document ).ready(function() {
 
     w.addObject(chair2);
 
-    //create cup object
-    var cup = new ProceduralObject('cup');
-    cup.setGeometry('obj/cup.obj');
-    cup.setMaterial("textures/text.jpg");
+    //create cup objects
+    var obj_count = 10000;
+    for (var i=0; i<obj_count; i++) {
+        var cup = new ProceduralObject('cup'+i);
+        cup.setGeometry('obj/cup.obj');
+        cup.setMaterial("textures/text.jpg");
 
-    var cup_translate = function(cupT, tableT) {
-        cupT.x = tableT.x;
-        cupT.y = tableT.y+1.97;
-        cupT.z = tableT.z;
+        var cup_translate = function(cupT, tableT) {
+            cupT.x = tableT.x;
+            cupT.y = tableT.y+1.97;
+            cupT.z = tableT.z;
+        }
+
+        cup.addConstraint("translate", table.getTranslate(), cup_translate);
+
+        var cup_rotate = function(cupR, tableR) {
+            cupR.x = tableR.x;
+            cupR.y = tableR.y;
+            cupR.z = tableR.z;
+        }
+
+        cup.addConstraint("rotate", table.getRotate(), cup_rotate);
+
+        var cup_scale = function(cupS, tableS) {
+            cupS.x = 0.021*tableS.x;
+            cupS.y = 0.021*tableS.y;
+            cupS.z = 0.021*tableS.z;
+        }
+
+        cup.addConstraint("scale", table.getScale(), cup_scale);
+
+        w.addObject(cup);
     }
-
-    cup.addConstraint("translate", table.getTranslate(), cup_translate);
-
-    var cup_rotate = function(cupR, tableR) {
-        cupR.x = tableR.x;
-        cupR.y = tableR.y;
-        cupR.z = tableR.z;
-    }
-
-    cup.addConstraint("rotate", table.getRotate(), cup_rotate);
-
-    var cup_scale = function(cupS, tableS) {
-        cupS.x = 0.021*tableS.x;
-        cupS.y = 0.021*tableS.y;
-        cupS.z = 0.021*tableS.z;
-    }
-
-    cup.addConstraint("scale", table.getScale(), cup_scale);
-
-    w.addObject(cup);
-
 
     //create lamp object
     var lamp = new ProceduralObject('lamp');
@@ -156,7 +158,7 @@ $( document ).ready(function() {
     w.addObject(lamp);
 
     var ts = new Date().getTime();
-    var iter = 10000;
+    var iter = 1000;
     // generate json
     for (var i=0; i<iter; i++) {
         var json = w.generate();
@@ -167,10 +169,10 @@ $( document ).ready(function() {
     console.log("Time to generate: "+t+" ms");
     
     // THREE.js integration
-    init();
-    var proceduralScene = genScene(json);
-    scene.add(proceduralScene);
-	animate();
+    //init();
+    //var proceduralScene = genScene(json);
+    //scene.add(proceduralScene);
+	//animate();
 });
 
 
@@ -271,9 +273,9 @@ function init() {
 	controls = new THREE.OrbitControls( camera, renderer.domElement );
 }
 function animate() {
-	requestAnimationFrame( animate );
-	render();
-	controls.update();
+	//requestAnimationFrame( animate );
+	//render();
+	//controls.update();
 }
 function render() {
 	var time = performance.now();
