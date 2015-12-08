@@ -53,7 +53,7 @@ CountProperty = function(parent, num) {
   // numeric count (integer)
   this.num = 0;
   // definition (may be range/function)
-  this._num = num || 0;
+  this._num = num || 1;
 
   this.eval = function() {
       this.num = this.prototype.sampleValue(this._num);
